@@ -58,6 +58,7 @@
 
 <script>
     import Social from "./components/Social";
+    import { Form } from "vform";
     export default{
         comments:{
             Social

@@ -40,7 +40,7 @@ trait HasScopeGenerate
      * @param $id
      * @return void
      */
-    public function scopeEdit(Builder $builder, Request $request, $id)
+    public function scopeEditRecord(Builder $builder, Request $request, $id)
     {
 
         if ($this->getComponent()) {
@@ -49,6 +49,24 @@ trait HasScopeGenerate
         }
 
         return $builder->find($id);
+    }
+    /**
+     * set auto filter
+     *
+     * @param Builder $builder
+     * @param Request $request
+     * @param $id
+     * @return void
+     */
+    public function scopeNewRecord(Builder $builder, Request $request)
+    {
+
+        if ($this->getComponent()) {
+
+            return app($this->getComponent(), compact('request'))->NewRecord($builder);
+        }
+
+        return $builder;
     }
 
 }

@@ -1,5 +1,5 @@
 <template>
-    <h4>{{ $route.meta}}</h4>
+    <div></div>
 </template>
 <script>
     import Api from "../../apis/Api";

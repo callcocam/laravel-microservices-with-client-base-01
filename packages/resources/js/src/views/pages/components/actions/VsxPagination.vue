@@ -69,7 +69,7 @@
                     return;
                 }
 
-                this.$emit("switched", page);
+                this.$emit("switched", {page:page});
 
                 // this.$router.replace({
                 //     query: Object.assign({}, this.$route.query, { page: page })

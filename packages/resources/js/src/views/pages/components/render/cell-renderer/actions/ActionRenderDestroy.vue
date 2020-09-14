@@ -1,19 +1,17 @@
 <template>
-    <vx-tooltip :text="$t(column.text)">
-        <vs-button
-            :icon-pack="column.pack"
-            :icon="column.icon"
-            :title="$t(column.text)"
-            :color="column.color"
-            :size="column.size"
-            :class="column.class"
-            :to="column.href"
-        >
-            <template v-if="column.label">
-                {{ $t(column.label) }}
-            </template>
-        </vs-button>
-    </vx-tooltip>
+    <vs-button
+        :icon-pack="column.attributes.pack"
+        :icon="column.attributes.icon"
+        :title="$t(column.attributes.text)"
+        :color="column.attributes.color"
+        :size="column.attributes.size"
+        :class="column.attributes.class"
+        :to="column.attributes.href"
+    >
+        <template v-if="column.label">
+            {{ $t(column.label) }}
+        </template>
+    </vs-button>
 </template>
 
 <script>

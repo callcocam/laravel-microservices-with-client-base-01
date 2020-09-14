@@ -18,4 +18,13 @@ trait Input
 
         return $this;
     }
+
+    /**
+     * @param $type
+     * @return $this
+     */
+    public function type($type){
+        $this->type = $type;
+        return $this;
+    }
 }

@@ -11,9 +11,11 @@ trait Hidden
 {
 
     public function hidden(){
-
         $this->type = "hidden";
-
+        $this->hidden_edit();
+        $this->hidden_create();
+        $this->hidden_show();
+        $this->hidden_list();
         return $this;
     }
 }

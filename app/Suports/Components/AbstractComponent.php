@@ -9,7 +9,8 @@ namespace App\Suports\Components;
 use App\Suports\Components\Fields\AbstractField;
 use App\Suports\Components\Fields\Field\Traits\WithParameters;
 use App\Suports\Components\Traits\Attribute;
-use App\Suports\Components\Traits\Edit;
+use App\Suports\Components\Traits\NewRecord;
+use App\Suports\Components\Traits\EditRecord;
 use App\Suports\Components\Traits\Foreign;
 use App\Suports\Components\Traits\Pagination;
 use App\Suports\Components\Traits\Search;
@@ -21,7 +22,7 @@ use Illuminate\Support\Str;
 
 abstract class AbstractComponent {
 
-use Search, Sorting, Foreign, Attribute, Pagination, Table, WithParameters, Edit;
+use Search, Sorting, Foreign, Attribute, Pagination, Table, WithParameters, EditRecord, NewRecord;
 
     protected $components;
     /**

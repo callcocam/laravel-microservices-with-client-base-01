@@ -7,12 +7,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
-class AbstractController extends Controller
+abstract class AbstractController extends Controller
 {
 
     protected $model;
@@ -34,9 +35,12 @@ class AbstractController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+
+        $model = app($this->model)->newRecord($request);
+
+        return response()->json($model);
     }
 
     /**
@@ -45,9 +49,20 @@ class AbstractController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function save($request, $id = null)
     {
-        //
+        if (!$this->model) {
+            return response()->json([
+                'message' => "Nenhuma model foi passada"
+            ]);
+        }
+        if ($id) {
+            $model = app($this->model)->find($id);
+            $model->update($request->input());
+        } else {
+            $model = app($this->model)->create($request->input());
+        }
+        return response()->json($model);
     }
 
     /**
@@ -58,7 +73,7 @@ class AbstractController extends Controller
      */
     public function show(Request $request,$id)
     {
-        $model = app($this->model)->edit($request,$id);
+        $model = app($this->model)->editRecord($request,$id);
         return response()->json($model);
     }
 
@@ -70,21 +85,10 @@ class AbstractController extends Controller
      */
     public function edit(Request $request,$id)
     {
-        $model = app($this->model)->edit($request,$id);
+        $model = app($this->model)->editRecord($request,$id);
         return response()->json($model);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -129,13 +133,13 @@ class AbstractController extends Controller
                 $model = app($this->model)->find($request->input('id'));
                 if ($model) {
                     $model->update([
-                        $request->input('name') => $path
+                        $request->input('name') => sprintf("/storage/%s", $path)
                     ]);
                 }
             }
             return response()->json([
                 'path' => sprintf("/storage/%s", $path),
-                'url' => url($path)
+                'url' => url(sprintf("/storage/%s", $path))
             ]);
     }
 

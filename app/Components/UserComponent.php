@@ -14,16 +14,18 @@ class UserComponent extends AbstractComponent {
         return [
             Column::make('id')->hidden(),
             Column::make('Cover')->cover()->route('users'),
+            Column::make('Type')->radio(['cpf'=>'Cpf','cnpj'=>'Cnpj']),
             Column::make('Name')->searchable()->input(),
+            Column::make('Fantasy')->searchable()->input(),
             Column::make('Email')->input(),
+            Column::make('Phone')->input(),
+            Column::make('Document')->input(),
+            Column::make('Test')->components([
+                Column::make('Ie')->switch('cnpj','type'),
+                Column::make('Rg')->switch('cpf','type'),
+            ])->hidden_list(),
             Column::make('Status')->status(),
-            Column::make('Actions')->components(
-                     [
-                         Link::make('Edit')->edit('users'),
-                         Link::make('Show')->show('users'),
-                         Link::make('Destroy')->destroy('users'),
-                     ]
-            ),
+            Column::make('Actions')->actions('users'),
         ];
     }
 }

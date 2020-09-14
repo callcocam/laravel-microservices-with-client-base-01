@@ -59,10 +59,13 @@ vSelect.props.components.default = () => ({
     })
   }
 })
-
 Vue.component(vSelect)
-
-
+import vueDebounce, { PluginConfig, debounce } from 'vue-debounce'
+window.debounce = debounce((callback) => {
+    callback()
+}, '400ms')
+// Listening to multiple events
+Vue.use<PluginConfig>(vueDebounce, { lock: true, defaultTime: '400ms', listenTo: 'keyup' })
 import {
     HasError,
     AlertError,
@@ -75,7 +78,3 @@ Vue.component(AlertError.name, AlertError)
 Vue.component(AlertErrors.name, AlertErrors)
 Vue.component(AlertSuccess.name, AlertSuccess)
 
-
-import { Form } from "vform";
-
-window.Form = Form;

@@ -8,7 +8,7 @@ namespace App\Suports\Components\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 
-trait Edit {
+trait EditRecord {
 
     public function edit(Builder $builder){
 

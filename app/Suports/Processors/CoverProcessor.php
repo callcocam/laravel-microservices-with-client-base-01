@@ -14,9 +14,9 @@ class CoverProcessor
 {
     public static function get($model)
     {
-        if(is_string($model))
-            return asset(sprintf("/storage/%s", $model));
-
+        if(is_string($model)){
+            return asset($model);
+        }
         return 'https://avatars.dicebear.com/v2/initials/' .Str::slug($model->name) . '.svg';
     }
 }

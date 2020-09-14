@@ -117,7 +117,7 @@ class AbstractMenus
         return AutoGenerate::make($path, $namespace);
     }
 
-    public function index_component(){ return 'AbstractIndex';}
+    public function index_component(){ return 'AbstractList';}
     public function list_component(){ return 'AbstractList';}
     public function destroy_component(){ return 'AbstractDestroy';}
     public function create_component(){ return 'AbstractCreate';}

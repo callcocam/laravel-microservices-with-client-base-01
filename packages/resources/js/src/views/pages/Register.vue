@@ -95,6 +95,7 @@
 <script>
     import Social from "./components/Social";
     import Csrf from "../../apis/Csrf";
+    import { Form } from "vform";
     export default{
         components: {Social},
         data () {

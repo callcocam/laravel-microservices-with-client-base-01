@@ -15,7 +15,7 @@ trait HasNavigation
 {
 
     protected $navigations = [];
-    protected function index_component(){ return 'AbstractIndex';}
+    protected function index_component(){ return 'AbstractList';}
     protected function list_component(){ return 'AbstractList';}
     protected function destroy_component(){ return 'AbstractDestroy';}
     protected function create_component(){ return 'AbstractCreate';}
@@ -41,7 +41,7 @@ trait HasNavigation
                     $navigations['name']        = sprintf("admin.%s.index", $slug);
                     $navigations['path']        = $slug;
                     $navigations['component']   = $result->index_component();
-                    $navigations['redirect']    = sprintf('admin.%s.list', $slug);
+                    $navigations['redirect']    = $this->namedRoute($slug, "list");
                     if($is_children):
                      $navigations['children']   = $this->children($name, $slug,$result);
                     endif;
@@ -80,18 +80,19 @@ trait HasNavigation
         if(Route::has(sprintf("admin.%s.create",$slug))) {
             if (!Gate::denies(sprintf("admin.%s.create", $slug))) {
                 return [
-                    'name' => sprintf('admin.%s.create', $slug),
+                    'name' =>sprintf("admin.%s.create", $slug),
                     'path' => sprintf('%s/create', $slug),
                     'component' => $result->create_component(),
                     "meta" => [
                         "auth" => true,
-                        "parent" => sprintf("admin.%s.index", $slug),
+                        "parent" => $this->namedRoute($slug, "list"),
+                        "edit" => $this->namedRoute($slug, "edit"),
                         "api" => $this->hasRoute(sprintf("admin.%s.create", $slug)),
                         "store" => $this->hasRoute(sprintf("admin.%s.store", $slug)),
                         "title" => "Dashboard",
                         "breadcrumb" => [
-                            ["title" => Str::title($name), "url" => ['name' => sprintf("admin.%s.index", $slug)]],
-                            ["title" => Str::title($name), "url" => ['name' => sprintf("admin.%s.index", $slug)]],
+                            ["title" => "Dashboard", "url" => ['name' => 'admin']],
+                            ["title" => Str::title($name), "url" => $this->namedRoute($slug, "list")],
                             ["title" => "Create", "active" => true]
                         ]
                     ]
@@ -111,14 +112,14 @@ trait HasNavigation
                     'component' => $result->edit_component(),
                     "meta" => [
                         "auth" => true,
-                        "parent" => sprintf("admin.%s.list", $slug),
+                        "parent" => $this->namedRoute($slug, "list"),
                         "api" => $this->hasRoute(sprintf("admin.%s.edit", $slug), '_id_'),
                         "update" => $this->hasRoute(sprintf("admin.%s.update", $slug), '_id_'),
                         "store" => $this->hasRoute(sprintf("admin.%s.store", $slug)),
                         "title" => "Dashboard",
                         "breadcrumb" => [
                             ["title" => "Dashboard", "url" => ['name' => 'admin']],
-                            ["title" => Str::title($name), "url" => ['name' => sprintf("admin.%s.index", $slug)]],
+                            ["title" => Str::title($name), "url" => $this->namedRoute($slug, "list")],
                             ["title" => "Edit", "active" => true]
                         ]
                     ]
@@ -139,12 +140,14 @@ trait HasNavigation
                     'component' => $result->show_component(),
                     "meta" => [
                         "auth" => true,
-                        "parent" => sprintf("admin.%s.list", $slug),
+                        "parent" => $this->namedRoute($slug, "list"),
+                        "create" => $this->namedRoute($slug, "create"),
+                        "edit" => $this->namedRoute($slug, "edit"),
                         "api" => $this->hasRoute(sprintf("admin.%s.show", $slug), '_id_'),
                         "title" => "Dashboard",
                         "breadcrumb" => [
                             ["title" => "Dashboard", "url" => ['name' => 'admin']],
-                            ["title" => Str::title($name), "url" => ['name' => sprintf("admin.%s.index", $slug)]],
+                            ["title" => Str::title($name), "url" => $this->namedRoute($slug, "list")],
                             ["title" => "Show", "active" => true]
                         ],
                     ]
@@ -166,7 +169,7 @@ trait HasNavigation
                     'component' => $result->destroy_component(),
                     "meta" => [
                         "auth" => true,
-                        "parent" => sprintf("admin.%s.index", $slug),
+                        "parent" => $this->namedRoute($slug, "index"),
                         "api" => $this->hasRoute(sprintf("admin.%s.destroy", $slug), '_id_'),
                         "title" => "Dashboard",
                         "question" => [
@@ -176,7 +179,7 @@ trait HasNavigation
                         ],
                         "breadcrumb" => [
                             ["title" => "Dashboard", "url" => ['name' => 'admin']],
-                            ["title" => Str::title($name), "url" => ['name' => sprintf("admin.%s.index", $slug)]],
+                            ["title" => Str::title($name), "url" => $this->namedRoute($slug, "list")],
                             ["title" => "Destroy", "active" => true]
                         ],
                     ]
@@ -192,16 +195,17 @@ trait HasNavigation
             if (!Gate::denies(sprintf("admin.%s.index", $slug))) {
                 return [
                     'name' => sprintf('admin.%s.list', $slug),
-                    'path' => sprintf('%s/list', $slug),
+                    'path' => $slug,
                     'component' => $result->list_component(),
                     "meta" => [
                         "auth" => true,
                         "api" => $this->hasRoute(sprintf('admin.%s.index', $slug)),
-                        "parent" => sprintf("admin.%s.index", $slug),
-                        "create" => sprintf("admin.%s.create", $slug),
-                        "itle" => "Dashboard",
+                        "parent" => $this->namedRoute($slug, "list"),
+                        "create" => $this->namedRoute($slug, "create"),
+                        "title" => "Dashboard",
                         "breadcrumb" => [
                             ["title" => "Dashboard", "url" => ['name' => 'admin']],
+                            ["title" => Str::title($name), "url" => $this->namedRoute($slug, "list")],
                             ["title" => "List", "active" => true]
                         ],
 
@@ -219,5 +223,10 @@ trait HasNavigation
         }
 
         return "";
+    }
+
+    protected function namedRoute($slug,$action){
+        $route['name'] = sprintf('admin.%s.%s', $slug, $action);
+        return $route;
     }
 }

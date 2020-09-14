@@ -1,7 +1,10 @@
 <template>
-    <div class="flex flex-wrap items-center justify-end">
-        <vs-button class="ml-auto mt-2">Save Changes</vs-button>
-        <vs-button class="ml-4 mt-2" type="border" color="warning">Reset</vs-button>
+    <div>
+        <template v-if="column.components">
+            <template  v-for="(component,index) in column.components">
+                <component :is="currentTabComponent(component.formRenderFramework)" :column="component" :form="form" :key="index"></component>
+            </template>
+        </template>
     </div>
 </template>
 <script>

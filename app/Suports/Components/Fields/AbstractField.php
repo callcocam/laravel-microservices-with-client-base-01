@@ -9,17 +9,20 @@ namespace App\Suports\Components\Fields;
 use App\Suports\Components\Fields\Field\Traits\Attributes;
 use App\Suports\Components\Fields\Field\Traits\Cover;
 use App\Suports\Components\Fields\Field\Traits\HasComponents;
+use App\Suports\Components\Fields\Field\Traits\HasVisible;
 use App\Suports\Components\Fields\Field\Traits\Hidden;
 use App\Suports\Components\Fields\Field\Traits\Input;
 use App\Suports\Components\Fields\Field\Traits\Radio;
 use App\Suports\Components\Fields\Field\Traits\Render;
 use App\Suports\Components\Fields\Field\Traits\Status;
+use App\Suports\Components\Fields\Field\Traits\SwitchCase;
 use Illuminate\Support\Str;
 
 class AbstractField {
 
-    use Input, Radio, Attributes, Status, Render, Cover,HasComponents, Hidden;
+    use Input, Radio, Attributes, Status, Render, Cover,HasComponents, Hidden, HasVisible, SwitchCase;
 
+    protected $model = null;
     /**
      * @var
      */
@@ -82,6 +85,17 @@ class AbstractField {
     public function __get($property)
     {
         return $this->{$property};
+    }
+
+    /**
+     * @param $model
+     * @return $this
+     */
+    public function model($model){
+
+        $this->model = $model;
+
+        return $this;
     }
 
     /**
@@ -217,4 +231,32 @@ class AbstractField {
         return $this->options;
     }
 
+
+    /**
+     * @return array
+     */
+    public function getComponents(): array
+    {
+        $components = [];
+        foreach ($this->components as $item) {
+            $component =  $this->component($component, 'options', $item->options);
+            $component =  $this->component($component, 'attributes',$this->attrs($item->attributes, $this->model));
+            $component =  $this->component($component, 'cellRenderFramework', $item->cellRenderFramework);
+            $component =  $this->component($component, 'hidden', $item->hidden);
+            $component =  $this->component($component, 'formRenderFramework', sprintf("FormRenderer%s", Str::title($item->type)));
+
+            if($item->hasSwitch()){
+                if($this->model)
+                    $component =  $this->component($component, 'value', $this->model->{$item->name});
+                $component =  $this->component($component, 'text', $item->text);
+                $component =  $this->component($component, 'type', $item->type);
+                $component =  $this->component($component, 'name', $item->name);
+                $component =  $this->component($component, 'equal', $item->equal);
+                $component =  $this->component($component, 'accept', $item->switch);
+                $component =  $this->component($component, 'switchRenderFramework', $item->switchRenderFramework);
+            }
+            $components[] = $component;
+        }
+        return $components;
+    }
 }

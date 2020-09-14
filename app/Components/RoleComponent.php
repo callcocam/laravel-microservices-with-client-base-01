@@ -13,9 +13,10 @@ class RoleComponent extends AbstractComponent {
     public function columns(){
 
         return [
-            Column::make('id')->input(),
+            Column::make('id')->hidden(),
             Column::make('Name')->searchable()->input(),
-            Column::make('Status')->radio(),
+            Column::make('Status')->status(),
+            Column::make('Actions')->actions('roles'),
         ];
     }
 }

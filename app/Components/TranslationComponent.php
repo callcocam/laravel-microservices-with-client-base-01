@@ -17,15 +17,15 @@ class TranslationComponent extends AbstractComponent {
     public function columns(){
 
         return [
-            //Column::make('id')->input(),
+            Column::make('id')->hidden(),
             Column::make('Name')->searchable()->input(),
             Column::make('Description')->input(),
             Column::make('Status')->status(),
             Column::make('Actions')->components(
                      [
-                         Link::make('Edit')->edit('users'),
-                         Link::make('Show')->show('users'),
-                         Link::make('Destroy')->destroy('users'),
+                         Link::make('Edit')->edit('translations'),
+                         Link::make('Show')->show('translations'),
+                         Link::make('Destroy')->destroy('translations'),
                      ]
             ),
         ];

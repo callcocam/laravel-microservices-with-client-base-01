@@ -9,6 +9,7 @@ namespace App\Suports\Components\Fields\Field;
 
 use App\Suports\Components\Fields\AbstractField;
 use App\Suports\Components\Fields\Field\Traits\WithParameters;
+use Illuminate\Support\Str;
 
 class Link extends AbstractField
 {
@@ -37,7 +38,9 @@ class Link extends AbstractField
      */
     public static function make($text): self
     {
-        return new static($text);
+        $column = new static($text);
+
+        return $column;
     }
 
     /**
@@ -185,6 +188,26 @@ class Link extends AbstractField
                 'query'=>$this->getUpdatesQueryParametersClean(),
             ];
         });
+    }
+
+
+    public function toArray(){
+        return [
+            'type'=>$this->type,
+            'text'=>$this->text,
+            'name'=>$this->name,
+            'searchable'=>$this->searchable,
+            'sortable'=>$this->sortable,
+            'hidden_list'=>$this->hidden_list,
+            'hidden_show'=>$this->hidden_show,
+            'hidden_create'=>$this->hidden_create,
+            'hidden_edit'=>$this->hidden_edit,
+            'html'=>$this->html,
+            'options'=>$this->options,
+            'formRenderFramework'=>sprintf("FormRenderer%s", Str::title($this->type)),
+            'cellRenderFramework'=>$this->cellRenderFramework,
+            'attributes'=>$this->getAttributes()
+        ];
     }
 
 }

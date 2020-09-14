@@ -20,18 +20,21 @@
     import AbstractForm from "./AbstractForm";
     import Csrf from "@/apis/Csrf";
     import Api from "../../apis/Api";
-    import {Form} from "vform";
+
     export default {
-        name: "AbstractEdit",
+        name: "AbstractCreate",
         extends:AbstractForm,
         methods:{
             submit(){
-                const { update  } = this.$route.meta;
+                const { store, edit } = this.$route.meta;
                 this.$vs.loading();
                 Csrf.getCookie()
                     .then(user => {
-                        this.form.put(update.replace('_id_', this.$route.params['id']), this.form).then(response=>{
+                        this.form.post(store, this.form).then(response=>{
                             this.$vs.loading.close();
+                            this.$router.push(Object.assign(edit, {params:{
+                                    id:response.data.id
+                                }}))
                         }).catch(err=>{
                             this.$vs.loading.close();
                         })
@@ -42,9 +45,10 @@
             },
             loadData(){
                 const { api, parent  } = this.$route.meta;
+                dd(this.$route.meta)
                 this.parent = parent
-                Api.get(api.replace('_id_', this.$route.params['id'])).then(response=>{
-                   this.refreshData(response)
+                Api.get(api).then(response=>{
+                    this.refreshData(response)
                 })
             }
         }
