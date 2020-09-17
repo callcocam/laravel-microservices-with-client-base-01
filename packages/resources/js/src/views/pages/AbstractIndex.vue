@@ -3,7 +3,7 @@
     // Store Module
     import moduleUserManagement from '@/store/modules/user-management'
     // Cell Renderer
-    import Api from "../../apis/Api";
+    import Api from "@/apis/Api";
     export default {
         name: "AbstractIndex",
         components: {
@@ -44,7 +44,7 @@
                 data:[],
                 selected:[],
                 columnDefs:[],
-                actions:null,
+                actions:[],
                 api:null,
                 auth:null,
                 create:null,
@@ -98,6 +98,7 @@
                 })
             },
             updateQueryString(params){
+                this.selected = [];
                 if ('URLSearchParams' in window) {
                     var searchParams = new URLSearchParams(window.location.search)
                     Object.keys(params).map(key=>{
@@ -122,11 +123,13 @@
                         columns,
                         options,
                         source,
+                        actions,
                         total} = response.data
 
                     this.data = data;
                     this.options = options;
                     this.source = source;
+                    this.actions = actions;
                     this.total = total;
                     Object.values(columns).map(value=>{
                         this.columnDefs.push(value)

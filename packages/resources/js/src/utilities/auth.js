@@ -11,7 +11,8 @@ class AuthService extends EventEmitter {
         this.loggedIn = true;
     }
     userData(){
-        return  this.loggedUser;
+
+        return  this.loggedUser || localStorage.getItem('userInfo');
     }
     isAuthenticated() {
         return this.loggedIn;

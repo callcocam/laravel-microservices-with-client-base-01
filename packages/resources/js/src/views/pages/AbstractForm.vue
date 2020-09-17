@@ -2,7 +2,6 @@
     import vSelect from 'vue-select'
     // Store Module
     import moduleUserManagement from '@/store/modules/user-management'
-    import Api from "../../apis/Api";
     import { Form } from "vform";
     export default {
         name: "AbstractIndex",
@@ -24,6 +23,17 @@
             this.loadData()
         },
         methods: {
+            showDeleteSuccess (data) {
+                this.$vs.notify(data)
+            },
+            showDeleteError (data) {
+                this.$vs.notify({
+                    time:8000,
+                    color: 'danger',
+                    title: 'User Deleted',
+                    text: data
+                })
+            },
             currentTabComponent: function(Component) {
                 return Component;
             },

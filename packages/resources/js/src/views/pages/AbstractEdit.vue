@@ -17,20 +17,20 @@
     </vx-card>
 </template>
 <script>
-    import AbstractForm from "./AbstractForm";
+    import AbstractForm from "@/views/pages/AbstractForm";
     import Csrf from "@/apis/Csrf";
-    import Api from "../../apis/Api";
-    import {Form} from "vform";
+    import Api from "@/apis/Api";
     export default {
         name: "AbstractEdit",
         extends:AbstractForm,
         methods:{
             submit(){
-                const { update  } = this.$route.meta;
+                const { update, store } = this.$route.meta;
                 this.$vs.loading();
                 Csrf.getCookie()
-                    .then(user => {
-                        this.form.put(update.replace('_id_', this.$route.params['id']), this.form).then(response=>{
+                    .then(() => {
+                         this.form.post(store).then(response=>{
+                            this.showDeleteSuccess(response.data)
                             this.$vs.loading.close();
                         }).catch(err=>{
                             this.$vs.loading.close();
@@ -38,6 +38,7 @@
                     })
                     .catch(() => {
                         this.isLoading = false;
+                        this.$vs.loading.close();
                     });
             },
             loadData(){

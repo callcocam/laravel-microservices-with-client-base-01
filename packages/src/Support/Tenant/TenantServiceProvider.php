@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * Created by Claudio Campos.
+ * User: callcocam@gmail.com, contato@sigasmart.com.br
+ * https://www.sigasmart.com.br
+ */
+
+namespace Call\Support\Tenant;
+
+use Call\Support\Tenant\Facades\Tenant;
+use Illuminate\Support\ServiceProvider;
+use Call\Tenant as SIGATenant;
+use Ramsey\Uuid\Uuid;
+
+class TenantServiceProvider extends ServiceProvider
+{
+
+    private $company;
+    /**
+     * Bootstrap the application events.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $this->mergeConfigFrom( base_path( '/packages/src/Support/Tenant/config/tenant.php'),'tenant');
+        try {
+
+            $tenant = \DB::table('tenants')->where('name', request()->getHost())->first();
+
+            if(!$this->app->runningInConsole()){
+                if (!$tenant) {
+                   if(\DB::insert('insert into tenants (id, name,created_at, updated_at) values (?, ?, ?,?)', [Uuid::uuid4(), request()->getHost(),today(), today()]))
+                       $tenant = \DB::table('tenants')->where('name', request()->getHost())->first();
+
+                }
+                if ($tenant) {
+                    $company = SIGATenant::find($tenant->id);
+
+                    Tenant::addTenant("tenant_id", $tenant->id);
+                    $companies = $company->companies;
+                    if($companies){
+                        view()->share('tenant',  $companies);
+                    }
+                }
+            }
+            else{
+                view()->share('tenant',  $tenant);
+            }
+
+        } catch (\PDOException $th) {
+            //throw $th;
+            dump("Falha no tenant");
+        }
+    }
+
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->app->singleton(TenantManager::class, function () {
+            return new TenantManager();
+        });
+    }
+}

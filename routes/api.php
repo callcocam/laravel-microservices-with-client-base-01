@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Spatie\AutoGenerate;
+use Call\Http\Menu\AutoGenerate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,12 +18,7 @@ Route::group([
     'prefix'=>'v1',
     'namespace'=>'Api',
 ],function (\Illuminate\Routing\Router $router){
+    $router->group(['middleware'=>'auth:sanctum'], function ($router){
 
-    $router->get('/languages', "LangController@lang");
-    $router->get('/load-config', "ConfigController@load");
-
-    $router->group(['auth:sanctum'], function ($router){
-        $router->get('/user', "MeController@me");
-        AutoGenerate::make()->routes();
     });
 });

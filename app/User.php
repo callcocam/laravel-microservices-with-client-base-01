@@ -5,12 +5,14 @@
  * https://www.sigasmart.com.br
  */
 namespace App;
-use App\Scopes\UuidGenerate;
-use App\Suports\Acl\Concerns\HasRolesAndPermissions;
-use App\Suports\Processors\CoverProcessor;
-use App\Suports\Tenant\BelongsToTenants;
-use App\Components\UserComponent;
-use App\Suports\Traits\HasScopeGenerate;
+use Call\Addres;
+use Call\Company;
+use Call\Scopes\UuidGenerate;
+use Call\Support\Acl\Concerns\HasRolesAndPermissions;
+use Call\Support\Processors\CoverProcessor;
+use Call\Support\Tenant\BelongsToTenants;
+use Call\Components\UserComponent;
+use Call\Support\Traits\HasScopeGenerate;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;

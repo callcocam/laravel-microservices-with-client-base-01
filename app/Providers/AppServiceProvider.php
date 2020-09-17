@@ -2,9 +2,7 @@
 
 namespace App\Providers;
 
-use App\Suports\Acl\AclServiceProvider;
-use App\Suports\Tenant\TenantServiceProvider;
-use Illuminate\Routing\Router;
+use Call\CallServiceProvider;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -16,15 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->register(TenantServiceProvider::class);
-        $this->app->register(AclServiceProvider::class);
-
-        $this->app->bind(
-            'AutoRoute',
-            function ($app) {
-                return new \App\Http\Spatie\Routes\AutoRouteGenerate(app(Router::class));
-            }
-        );
+        $this->app->register(CallServiceProvider::class);
     }
 
     /**

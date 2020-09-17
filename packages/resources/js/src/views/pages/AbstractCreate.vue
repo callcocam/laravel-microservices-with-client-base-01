@@ -29,9 +29,10 @@
                 const { store, edit } = this.$route.meta;
                 this.$vs.loading();
                 Csrf.getCookie()
-                    .then(user => {
+                    .then(() => {
                         this.form.post(store, this.form).then(response=>{
                             this.$vs.loading.close();
+                            this.showDeleteSuccess(response.data)
                             this.$router.push(Object.assign(edit, {params:{
                                     id:response.data.id
                                 }}))
@@ -45,7 +46,6 @@
             },
             loadData(){
                 const { api, parent  } = this.$route.meta;
-                dd(this.$route.meta)
                 this.parent = parent
                 Api.get(api).then(response=>{
                     this.refreshData(response)
